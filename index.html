@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#07080a" />
+<title>SlotRescue AI — Creignificent LLC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Outfit:wght@380;460;560&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #07080a;
+    --card: #12141a;
+    --line: rgba(244,241,234,.1);
+    --text: #f4f1ea;
+    --muted: #9c978e;
+    --gold: #e0b15a;
+    --gold-2: #f0d7a2;
+    --good: #3dbe8c;
+    --bad: #e15d4e;
+    --warn: #e0b15a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: Outfit, system-ui, sans-serif; }
+  body { min-height: 100dvh; }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { max-width: 480px; margin: 0 auto; padding: 18px 16px 108px; }
+  .brand { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .mark { font-family: Fraunces, serif; font-size: 22px; letter-spacing: -.03em; }
+  .mark span { color: var(--gold); }
+  .sponsor { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .pill { border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; font-size: 12px; color: var(--muted); }
+  .pill.live { color: var(--good); border-color: rgba(61,190,140,.4); }
+  .pill.dead { color: var(--bad); border-color: rgba(225,93,78,.45); }
+  h1 { font-family: Fraunces, serif; font-weight: 560; font-size: 40px; line-height: .95; letter-spacing: -.03em; margin: 22px 0 10px; }
+  h2 { font-family: Fraunces, serif; font-size: 28px; margin: 8px 0 6px; letter-spacing: -.03em; }
+  p.lede { color: var(--muted); font-size: 16px; line-height: 1.45; margin: 0 0 18px; }
+  .gold { color: var(--gold-2); }
+  .btn { width: 100%; border: 0; border-radius: 14px; padding: 15px 16px; background: var(--gold); color: #1a1408; font-weight: 560; letter-spacing: .04em; }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+  .btn.bad { background: transparent; color: var(--bad); border: 1px solid rgba(225,93,78,.4); }
+  .btn + .btn { margin-top: 8px; }
+  .rowbtn { display: flex; gap: 8px; }
+  .rowbtn .btn { width: auto; flex: 1; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; }
+  th { text-align: left; font-size: 13px; color: var(--muted); font-weight: 460; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  td { vertical-align: top; padding: 16px 10px 16px 0; border-bottom: 1px solid var(--line); font-size: 16px; line-height: 1.3; }
+  td.fn { color: var(--muted); font-size: 14px; width: 46%; }
+  tr.tap { cursor: pointer; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin: 10px 0; }
+  .card h3 { margin: 0 0 4px; font-size: 16px; }
+  .meta { color: var(--muted); font-size: 13px; line-height: 1.4; }
+  .tag { display: inline-block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; margin-right: 6px; color: var(--gold-2); }
+  .tag.good { color: var(--good); }
+  .tag.bad { color: var(--bad); }
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+  .kpi b { display: block; font-family: Fraunces, serif; font-size: 26px; }
+  .kpi span { color: var(--muted); font-size: 12px; }
+  .nav { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(7,8,10,.92); backdrop-filter: blur(10px); border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 8px 6px calc(8px + env(safe-area-inset-bottom)); }
+  .nav button { background: none; border: 0; color: var(--muted); font-size: 11px; letter-spacing: .04em; padding: 6px; }
+  .nav button.on { color: var(--gold-2); }
+  .screen { display: none; }
+  .screen.on { display: block; }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+  input, select, textarea { width: 100%; background: #0c0e12; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  textarea { min-height: 120px; }
+  .note { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .offer { white-space: pre-wrap; font-size: 14px; line-height: 1.45; }
+  .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .check input { width: auto; margin-top: 4px; }
+  .toast { position: fixed; left: 16px; right: 16px; bottom: 78px; background: #1c2118; border: 1px solid rgba(61,190,140,.4); color: var(--text); border-radius: 12px; padding: 12px; display: none; z-index: 5; }
+  .steps { display: flex; gap: 6px; margin: 8px 0 12px; }
+  .steps i { height: 3px; flex: 1; background: var(--line); border-radius: 99px; display: block; }
+  .steps i.on { background: var(--gold); }
+  ul.clean { padding-left: 18px; color: var(--muted); }
+  ul.clean li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div>
+      <div class="mark">Slot<span>Rescue</span></div>
+      <div class="sponsor">Creignificent LLC</div>
+    </div>
+    <div id="livepill" class="pill live">Automation live</div>
+  </div>
+
+  <section id="land" class="screen on">
+    <h1>Canceled time is still sellable.</h1>
+    <p class="lede">SlotRescue finds an opted-in customer for an open appointment, drafts the offer from the booking record, and waits for your approval before anyone is contacted.</p>
+    <button class="btn" onclick="go('home')">Open the command center</button>
+    <div class="card">
+      <div class="tag">Sample shop</div>
+      <h3>Harbor Fade · Rialto</h3>
+      <p class="meta">Practice book only. No real customers. The lock that stops a double booking is real in this browser.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>$29</b><span>Pro / month after the free path works</span></div>
+      <div class="kpi"><b>$75</b><span>One recovered cut covers the month</span></div>
+    </div>
+    <h2>The path</h2>
+    <ul class="clean">
+      <li>Owner marks the appointment canceled.</li>
+      <li>Engine checks time, duration, and staff.</li>
+      <li>Waitlist match uses consent, service, and time window only.</li>
+      <li>Offer is drafted from those records. Nothing is invented.</li>
+      <li>Owner approves. Then email goes out.</li>
+      <li>First valid claim confirms. The next one is refused.</li>
+    </ul>
+  </section>
+
+  <section id="home" class="screen">
+    <h2>Business command center</h2>
+    <p class="lede">Harbor Fade · sample book · today</p>
+    <table>
+      <thead><tr><th>Dashboard component</th><th>Function</th></tr></thead>
+      <tbody id="comptable"></tbody>
+    </table>
+    <button class="btn" onclick="startRescue()">FIND A REPLACEMENT CUSTOMER</button>
+  </section>
+
+  <section id="list" class="screen">
+    <h2 id="listtitle">List</h2>
+    <div id="listbody"></div>
+  </section>
+
+  <section id="rescue" class="screen">
+    <h2>Find a replacement</h2>
+    <div class="steps" id="steps"></div>
+    <div id="rescuebody"></div>
+  </section>
+
+  <section id="book" class="screen">
+    <h2>Customer booking</h2>
+    <p class="lede">This is the link the customer opens. SlotRescue does not charge them. The shop collects payment its own way.</p>
+    <div id="bookbody"></div>
+  </section>
+
+  <section id="revenue" class="screen">
+    <h2>Revenue dashboard</h2>
+    <div class="kpis" id="revkpis"></div>
+    <div id="revbody"></div>
+  </section>
+
+  <section id="settings" class="screen">
+    <h2>Settings</h2>
+    <div class="card">
+      <h3>Emergency shutdown</h3>
+      <p class="meta">Stops new offers. Existing confirmed bookings stay confirmed.</p>
+      <button class="btn bad" id="killbtn" onclick="toggleKill()">Disable automation</button>
+    </div>
+    <div class="card">
+      <h3>Data</h3>
+      <p class="meta">Export or wipe this browser book. Sample data can be restored.</p>
+      <div class="rowbtn">
+        <button class="btn ghost" onclick="exportData()">Export</button>
+        <button class="btn ghost" onclick="wipe()">Delete</button>
+      </div>
+      <button class="btn ghost" onclick="resetSample()">Restore sample book</button>
+    </div>
+    <div class="card">
+      <h3>Audit</h3>
+      <div id="auditbody"></div>
+    </div>
+    <p class="note">V1 boundary: email is an outbox until Resend is connected. Stripe is the SaaS plan only. SMS and phone calls are out.</p>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<nav class="nav">
+  <button onclick="go('home')" id="n-home">Home</button>
+  <button onclick="startRescue()" id="n-rescue">Rescue</button>
+  <button onclick="showList('waitlist')" id="n-wait">Waitlist</button>
+  <button onclick="go('revenue')" id="n-rev">Revenue</button>
+  <button onclick="go('settings')" id="n-set">Settings</button>
+</nav>
+<script>
+const KEY = "slotrescue.v1";
+const SAMPLE = () => ({
+  shop: "Harbor Fade",
+  city: "Rialto",
+  plan: "free",
+  automation: true,
+  label: "sample",
+  appointments: [
+    { id: "a1", customer: "Jordan Lee", service: "Skin fade", staff: "Marcus", time: "11:00", price: 45, status: "scheduled" },
+    { id: "a2", customer: "Chris Patel", service: "Beard trim", staff: "Dre", time: "12:30", price: 25, status: "scheduled" },
+    { id: "a3", customer: "Andre Cole", service: "Cut + beard", staff: "Marcus", time: "14:30", price: 75, status: "open", canceledFrom: "Andre Cole" },
+    { id: "a4", customer: "Maya Brooks", service: "Skin fade", staff: "Dre", time: "16:00", price: 45, status: "recovered", recoveredBy: "Maya Brooks" }
+  ],
+  waitlist: [
+    { id: "w1", name: "Maya Brooks", email: "maya@example.com", service: "Skin fade", window: "Afternoon", priority: 2, consent: true },
+    { id: "w2", name: "Luis Ortega", email: "luis@example.com", service: "Cut + beard", window: "Afternoon", priority: 3, consent: true },
+    { id: "w3", name: "Sam Nguyen", email: "sam@example.com", service: "Cut + beard", window: "Morning", priority: 1, consent: true },
+    { id: "w4", name: "Imani Ross", email: "imani@example.com", service: "Beard trim", window: "Anytime", priority: 1, consent: false }
+  ],
+  campaigns: [],
+  reservations: [
+    { id: "r0", appointmentId: "a4", customerId: "w1", status: "confirmed" }
+  ],
+  revenue: [
+    { id: "rev0", appointmentId: "a4", amount: 45, note: "Recovered 4:00 skin fade" }
+  ],
+  deliveries: [],
+  audit: [
+    { at: "09:12", action: "seed", detail: "Sample Harbor Fade book loaded. Not live customers." }
+  ]
+});
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return SAMPLE();
+    return JSON.parse(raw);
+  } catch (e) { return SAMPLE(); }
+}
+function save(s) { localStorage.setItem(KEY, JSON.stringify(s)); paint(); }
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 2400);
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&","<":"<",">":">","\"":"""}[c])); }
+function go(id) {
+  document.querySelectorAll(".screen").forEach(n => n.classList.remove("on"));
+  document.getElementById(id).classList.add("on");
+  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("on"));
+  const map = { home: "n-home", rescue: "n-rescue", revenue: "n-rev", settings: "n-set" };
+  if (map[id]) document.getElementById(map[id]).classList.add("on");
+  if (id === "settings") renderAudit();
+  if (id === "revenue") renderRevenue();
+  window.scrollTo(0, 0);
+}
+function paint() {
+  const s = load();
+  const pill = document.getElementById("livepill");
+  pill.textContent = s.automation ? "Automation live" : "Automation off";
+  pill.className = "pill " + (s.automation ? "live" : "dead");
+  document.getElementById("killbtn").textContent = s.automation ? "Disable automation" : "Enable automation";
+  const open = s.appointments.filter(a => a.status === "open").length;
+  const wait = s.waitlist.filter(w => w.consent).length;
+  const recovered = s.revenue.reduce((n, r) => n + r.amount, 0);
+  const pending = s.campaigns.filter(c => c.status === "approved" || c.status === "draft").length;
+  const rows = [
+    ["Today's Appointments", "Displays all scheduled appointments for today", "appts"],
+    ["Open Cancellations", "Shows available openings from canceled appointments", "open"],
+    ["Customer Waitlist", "Lists customers opted into replacement offers", "waitlist"],
+    ["AI Recommendations", "Suggests consented customers who fit the open slot", "recs"],
+    ["Approval Center", "Reviews the offer and recipients before send", "approve"],
+    ["Recovered Bookings", "Shows appointments filled from the waitlist", "recovered"],
+    ["Revenue Dashboard", "Tracks recovered sales from filled openings", "revenue"]
+  ];
+  document.getElementById("comptable").innerHTML = rows.map(r =>
+    `<tr class="tap" onclick="openComp('${r[2]}')"><td>${r[0]}</td><td class="fn">${r[1]}</td></tr>`
+  ).join("");
+  document.getElementById("revkpis").innerHTML =
+    `<div class="kpi"><b>$${recovered}</b><span>Recovered sales</span></div>
+     <div class="kpi"><b>${open}</b><span>Open slots · ${wait} consented</span></div>`;
+}
+function openComp(key) {
+  if (key === "revenue") return go("revenue");
+  if (key === "recs" || key === "approve") return startRescue();
+  showList(key);
+}
+function showList(key) {
+  const s = load();
+  const title = document.getElementById("listtitle");
+  const body = document.getElementById("listbody");
+  go("list");
+  document.getElementById("n-wait").classList.toggle("on", key === "waitlist");
+  if (key === "appts") {
+    title.textContent = "Today's appointments";
+    body.innerHTML = s.appointments.map(a => cardAppt(a, true)).join("");
+  } else if (key === "open") {
+    title.textContent = "Open cancellations";
+    const open = s.appointments.filter(a => a.status === "open");
+    body.innerHTML = open.length ? open.map(a => cardAppt(a, false)).join("") + `<button class="btn" onclick="startRescue()">FIND A REPLACEMENT CUSTOMER</button>` : `<p class="meta">No open slots.</p>`;
+  } else if (key === "waitlist") {
+    title.textContent = "Customer waitlist";
+    body.innerHTML = s.waitlist.map(w => `<div class="card"><div class="tag ${w.consent ? "good" : "bad"}">${w.consent ? "Opted in" : "No consent"}</div><h3>${esc(w.name)}</h3><p class="meta">${esc(w.service)} · ${esc(w.window)} · priority ${w.priority}<br>${esc(w.email)}</p></div>`).join("") + addWaitForm();
+  } else if (key === "recovered") {
+    title.textContent = "Recovered bookings";
+    const rec = s.appointments.filter(a => a.status === "recovered" || a.status === "completed");
+    body.innerHTML = rec.map(a => cardAppt(a, false)).join("") || `<p class="meta">None yet.</p>`;
+  }
+}
+function cardAppt(a, canCancel) {
+  const label = a.status === "open" ? "Open slot" : a.status === "recovered" ? "Recovered" : a.status;
+  return `<div class="card"><div class="tag">${esc(label)}</div><h3>${esc(a.time)} · ${esc(a.service)}</h3><p class="meta">${esc(a.staff)} · $${a.price}${a.customer ? " · " + esc(a.customer) : ""}${a.canceledFrom ? "<br>Canceled by " + esc(a.canceledFrom) : ""}</p>${canCancel && a.status === "scheduled" ? `<button class="btn ghost" onclick="cancelAppt('${a.id}')">Mark canceled</button>` : ""}</div>`;
+}
+function addWaitForm() {
+  return `<div class="card"><h3>Add opted-in customer</h3>
+    <label>Name</label><input id="wn" />
+    <label>Email</label><input id="we" />
+    <label>Service</label><select id="ws"><option>Skin fade</option><option>Beard trim</option><option>Cut + beard</option></select>
+    <label>Time window</label><select id="ww"><option>Afternoon</option><option>Morning</option><option>Anytime</option></select>
+    <button class="btn" onclick="addWait()">Save to waitlist</button>
+    <p class="note">Saving records email consent for replacement offers only.</p></div>`;
+}
+function addWait() {
+  const s = load();
+  const name = document.getElementById("wn").value.trim();
+  const email = document.getElementById("we").value.trim();
+  if (!name || !email.includes("@")) return toast("Name and email required.");
+  s.waitlist.push({ id: "w" + Date.now(), name, email, service: document.getElementById("ws").value, window: document.getElementById("ww").value, priority: 1, consent: true });
+  s.audit.unshift({ at: clock(), action: "consent", detail: name + " opted into email offers." });
+  save(s); showList("waitlist"); toast("Waitlist updated.");
+}
+function cancelAppt(id) {
+  const s = load();
+  const a = s.appointments.find(x => x.id === id);
+  if (!a) return;
+  a.canceledFrom = a.customer;
+  a.customer = "";
+  a.status = "open";
+  s.audit.unshift({ at: clock(), action: "cancel", detail: a.time + " " + a.service + " marked canceled." });
+  save(s); showList("appts"); toast("Opening created.");
+}
+function clock() { return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); }
+function score(appt, w) {
+  if (!w.consent) return null;
+  if (w.service !== appt.service) return null;
+  let n = 50 + w.priority * 10;
+  const afternoon = appt.time >= "12:00";
+  if (w.window === "Anytime") n += 15;
+  else if (afternoon && w.window === "Afternoon") n += 25;
+  else if (!afternoon && w.window === "Morning") n += 25;
+  else n -= 10;
+  return n;
+}
+function matches(s, appt) {
+  return s.waitlist.map(w => ({ w, score: score(appt, w) })).filter(x => x.score !== null).sort((a, b) => b.score - a.score);
+}
+function draft(appt, people) {
+  const names = people.map(p => p.w.name).join(", ") || "no consented match";
+  return `Harbor Fade has an opening.\n\n${appt.time} · ${appt.service} · ${appt.staff}\n${appt.price} dollars · about 45 minutes\n\nThis offer uses the canceled appointment record only. Recipients considered: ${names}.\n\nReply through the booking link. The first confirmed request takes the slot. Harbor Fade collects payment at the shop.`;
+}
+let wizard = { step: 1, apptId: null, picked: [] };
+function startRescue() {
+  wizard = { step: 1, apptId: null, picked: [] };
+  go("rescue");
+  document.getElementById("n-rescue").classList.add("on");
+  renderRescue();
+}
+function renderRescue() {
+  const s = load();
+  document.getElementById("steps").innerHTML = [1,2,3,4].map(n => `<i class="${n <= wizard.step ? "on" : ""}"></i>`).join("");
+  const body = document.getElementById("rescuebody");
+  if (!s.automation && wizard.step > 1) {
+    body.innerHTML = `<div class="card"><h3>Automation is off</h3><p class="meta">The kill switch is engaged. Turn it back on in Settings to send.</p></div>`;
+    return;
+  }
+  if (wizard.step === 1) {
+    const open = s.appointments.filter(a => a.status === "open");
+    body.innerHTML = `<p class="meta">Pick the canceled appointment. Availability is the record below — time, service, staff, price.</p>` +
+      (open.map(a => `<div class="card"><h3>${esc(a.time)} · ${esc(a.service)}</h3><p class="meta">${esc(a.staff)} · $${a.price} · canceled by ${esc(a.canceledFrom || "owner")}</p><button class="btn" onclick="pickAppt('${a.id}')">Use this opening</button></div>`).join("") || `<p class="meta">No open cancellation. Mark one from Today's Appointments.</p><button class="btn ghost" onclick="showList('appts')">Today's appointments</button>`);
+  } else if (wizard.step === 2) {
+    const appt = s.appointments.find(a => a.id === wizard.apptId);
+    const list = matches(s, appt);
+    body.innerHTML = `<div class="card"><h3>${esc(appt.time)} ${esc(appt.service)}</h3><p class="meta">Match rule: consent on, same service, time window scored. No invented availability.</p></div>` +
+      (list.map(m => `<label class="check"><input type="checkbox" value="${m.w.id}" ${wizard.picked.includes(m.w.id) ? "checked" : ""} onchange="togglePick('${m.w.id}')" /><span><b>${esc(m.w.name)}</b><br><span class="meta">${esc(m.w.window)} window · score ${m.score} · ${esc(m.w.email)}</span></span></label>`).join("") || `<p class="meta">No consented customer wants this service.</p>`) +
+      `<button class="btn" onclick="toDraft()">Draft the offer</button>`;
+  } else if (wizard.step === 3) {
+    const appt = s.appointments.find(a => a.id === wizard.apptId);
+    const people = s.waitlist.filter(w => wizard.picked.includes(w.id));
+    body.innerHTML = `<p class="meta">Grounded draft. Edit the wording. Do not add a time or price that is not on the appointment.</p><textarea id="offer">${esc(draft(appt, people.map(w => ({ w }))))}</textarea><p class="note">Human approval required. Nothing sends until you approve.</p><button class="btn" onclick="approve()">Approve recipients and offer</button>`;
+  } else {
+    const camp = s.campaigns.find(c => c.id === wizard.campId);
+    body.innerHTML = `<div class="card"><div class="tag">Outbox</div><h3>${camp ? camp.status : "queued"}</h3><p class="meta">Local delivery log. Not a live Resend send.</p><div class="offer">${esc(camp ? camp.body : "")}</div></div>
+      <button class="btn" onclick="go('book'); renderBook()">Open the customer link</button>
+      <button class="btn ghost" onclick="compete()">Simulate a second customer</button>
+      <div id="compete"></div>`;
+  }
+}
+function pickAppt(id) { wizard.apptId = id; wizard.step = 2; wizard.picked = []; renderRescue(); }
+function togglePick(id) { wizard.picked = wizard.picked.includes(id) ? wizard.picked.filter(x => x !== id) : wizard.picked.concat(id); }
+function toDraft() {
+  if (!wizard.picked.length) return toast("Select at least one customer.");
+  wizard.step = 3; renderRescue();
+}
+function approve() {
+  const s = load();
+  if (!s.automation) return toast("Automation is off.");
+  const used = s.campaigns.filter(c => c.status !== "closed").length;
+  if (s.plan === "free" && used >= 10) return toast("Free plan cap is 10 campaigns.");
+  const body = document.getElementById("offer").value.trim();
+  const appt = s.appointments.find(a => a.id === wizard.apptId);
+  if (body.includes("$") && !body.includes(String(appt.price))) return toast("Price in the offer must match the appointment.");
+  const id = "c" + Date.now();
+  s.campaigns.push({ id, appointmentId: appt.id, status: "sent", body, recipients: wizard.picked.slice() });
+  wizard.picked.forEach(wid => s.deliveries.push({ id: "d" + wid, campaignId: id, customerId: wid, status: "queued-local" }));
+  s.audit.unshift({ at: clock(), action: "approve", detail: "Owner approved offer for " + appt.time + " " + appt.service + "." });
+  wizard.campId = id; wizard.step = 4;
+  save(s); renderRescue(); toast("Approved. Outbox queued.");
+}
+function renderBook() {
+  const s = load();
+  const camp = s.campaigns.find(c => c.id === wizard.campId) || s.campaigns[s.campaigns.length - 1];
+  if (!camp) { document.getElementById("bookbody").innerHTML = `<p class="meta">No approved offer yet.</p>`; return; }
+  const appt = s.appointments.find(a => a.id === camp.appointmentId);
+  const taken = s.reservations.some(r => r.appointmentId === appt.id && r.status === "confirmed");
+  const people = s.waitlist.filter(w => camp.recipients.includes(w.id));
+  document.getElementById("bookbody").innerHTML = `<div class="card"><div class="tag">${taken ? "Filled" : "Open"}</div><h3>${esc(appt.time)} · ${esc(appt.service)}</h3><p class="meta">${esc(appt.staff)} at Harbor Fade · $${appt.price}<br>Pay at the shop. This link only reserves the time.</p>
+    ${taken ? `<p class="meta">This opening is no longer available.</p>` : people.map(p => `<button class="btn" onclick="claim('${camp.id}','${p.id}')">Reserve as ${esc(p.name)}</button>`).join("")}
+  </div>`;
+}
+function claim(campId, customerId) {
+  const s = load();
+  const camp = s.campaigns.find(c => c.id === campId);
+  const appt = s.appointments.find(a => a.id === camp.appointmentId);
+  const person = s.waitlist.find(w => w.id === customerId);
+  if (!person || !person.consent) return toast("No consent on file.");
+  if (appt.status !== "open" || s.reservations.some(r => r.appointmentId === appt.id && r.status === "confirmed")) {
+    s.reservations.push({ id: "rx" + Date.now(), appointmentId: appt.id, customerId, status: "rejected" });
+    s.audit.unshift({ at: clock(), action: "reject", detail: person.name + " lost the race. Slot already confirmed." });
+    save(s); renderBook(); return toast("Opening already taken.");
+  }
+  appt.status = "recovered";
+  appt.customer = person.name;
+  appt.recoveredBy = person.name;
+  camp.status = "filled";
+  s.reservations.push({ id: "r" + Date.now(), appointmentId: appt.id, customerId, status: "confirmed" });
+  s.revenue.push({ id: "rev" + Date.now(), appointmentId: appt.id, amount: appt.price, note: "Recovered " + appt.time + " " + appt.service });
+  s.audit.unshift({ at: clock(), action: "confirm", detail: person.name + " confirmed " + appt.time + ". Others blocked." });
+  save(s); renderBook(); toast("Booked. Competing claims will fail.");
+}
+function compete() {
+  const s = load();
+  const camp = s.campaigns.find(c => c.id === wizard.campId);
+  if (!camp) return;
+  const other = camp.recipients.map(id => s.waitlist.find(w => w.id === id)).find(w => w && !s.reservations.some(r => r.customerId === w.id && r.status === "confirmed"));
+  if (!other) { document.getElementById("compete").innerHTML = `<p class="meta">No second recipient left.</p>`; return; }
+  claim(camp.id, other.id);
+}
+function renderRevenue() {
+  const s = load();
+  document.getElementById("revbody").innerHTML = s.revenue.map(r => `<div class="card"><h3>$${r.amount}</h3><p class="meta">${esc(r.note)}</p></div>`).join("") || `<p class="meta">No recovered sales yet.</p>`;
+  document.getElementById("revbody").innerHTML += `<div class="card"><h3>Pro · $29/month</h3><p class="meta">Unlimited campaigns, revenue report, more service categories. Stripe Checkout is the billing path. Not charged in this build. Service payments stay with the shop.</p></div>`;
+}
+function renderAudit() {
+  const s = load();
+  document.getElementById("auditbody").innerHTML = s.audit.slice(0, 12).map(e => `<p class="meta"><b>${esc(e.at)} · ${esc(e.action)}</b><br>${esc(e.detail)}</p>`).join("");
+}
+function toggleKill() {
+  const s = load();
+  s.automation = !s.automation;
+  s.audit.unshift({ at: clock(), action: s.automation ? "enable" : "kill", detail: s.automation ? "Automation enabled." : "Emergency shutdown. Sends blocked." });
+  save(s); toast(s.automation ? "Automation on." : "Automation off.");
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(load(), null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "slotrescue-export.json";
+  a.click();
+}
+function wipe() {
+  localStorage.removeItem(KEY);
+  save(SAMPLE());
+  toast("Book deleted and sample restored.");
+}
+function resetSample() { localStorage.removeItem(KEY); save(SAMPLE()); toast("Sample book restored."); }
+paint();
+</script>
+</body>
+</html>

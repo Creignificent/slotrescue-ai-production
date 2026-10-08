@@ -1,0 +1,26 @@
+{
+  "name": "slotrescue-ai-production",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node tests/claim-lock.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.1",
+    "next": "^15.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "resend": "^4.1.2",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.8.2"
+  }
+}
